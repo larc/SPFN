@@ -7,7 +7,7 @@ from pointnet_plusplus.architectures import build_pointnet2_seg, build_pointnet2
 from utils.tf_wrapper import batched_gather
 import fitter_factory
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 

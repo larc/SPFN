@@ -16,7 +16,7 @@ sys.path.append(os.path.join(ROOT_DIR, 'tf_ops/3d_interpolation'))
 from tf_sampling import farthest_point_sample, gather_point
 from tf_grouping import query_ball_point, group_point, knn_point
 from tf_interpolate import three_nn, three_interpolate
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 import tf_util
 

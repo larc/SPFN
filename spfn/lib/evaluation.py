@@ -7,7 +7,7 @@ from utils.tf_wrapper import batched_gather
 from utils.tf_numerical_safe import acos_safe, sqrt_safe
 from constants import DIVISION_EPS
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 

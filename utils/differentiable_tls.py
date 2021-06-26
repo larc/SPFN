@@ -1,6 +1,6 @@
 # differentiable total least square solver
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 def custom_svd_v_column(M, col_index=-1):
     # Must make sure M is finite. Otherwise cudaSolver might fail.

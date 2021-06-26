@@ -10,7 +10,7 @@ from utils.differentiable_tls import register_custom_svd_gradient
 import fitter_factory
 
 import random
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from tensorflow.python import debug as tf_debug
 import numpy as np
 import os

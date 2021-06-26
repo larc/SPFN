@@ -1,4 +1,4 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 
 def _variable_on_gpu(name, shape, initializer, dtype=tf.float32):

@@ -1,4 +1,4 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from utils.tf_wrapper import batched_gather
 
 def adaptor_matching(param_list, matching_indices):

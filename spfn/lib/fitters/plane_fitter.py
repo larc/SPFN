@@ -10,7 +10,7 @@ from utils.tf_numerical_safe import acos_safe
 from fitters.adaptors import *
 from primitives import Plane
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 
 ''' Fitters should have no knowledge of ground truth labels,

@@ -11,7 +11,7 @@ from utils.tf_numerical_safe import sqrt_safe, acos_safe
 from fitters.adaptors import *
 from primitives import Cylinder
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 
 class CylinderFitter:

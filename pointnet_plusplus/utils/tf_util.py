@@ -5,7 +5,7 @@ Date: November 2017
 """
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 def _variable_on_gpu(name, shape, initializer, use_fp16=False):
   """Helper to create a Variable stored on CPU memory.
@@ -39,7 +39,7 @@ def _variable_with_weight_decay(name, shape, stddev, wd, use_xavier=True):
     Variable Tensor
   """
   if use_xavier:
-    initializer = tf.contrib.layers.xavier_initializer()
+    initializer = tf.keras.initializers.glorot_normal()
   else:
     initializer = tf.truncated_normal_initializer(stddev=stddev)
   var = _variable_on_gpu(name, shape, initializer)
@@ -87,9 +87,9 @@ def conv1d(inputs,
   with tf.variable_scope(scope) as sc:
     assert(data_format=='NHWC' or data_format=='NCHW')
     if data_format == 'NHWC':
-      num_in_channels = inputs.get_shape()[-1].value
+      num_in_channels = inputs.get_shape()[-1]
     elif data_format=='NCHW':
-      num_in_channels = inputs.get_shape()[1].value
+      num_in_channels = inputs.get_shape()[1]
     kernel_shape = [kernel_size,
                     num_in_channels, num_output_channels]
     kernel = _variable_with_weight_decay('weights',
@@ -156,9 +156,9 @@ def conv2d(inputs,
       kernel_h, kernel_w = kernel_size
       assert(data_format=='NHWC' or data_format=='NCHW')
       if data_format == 'NHWC':
-        num_in_channels = inputs.get_shape()[-1].value
+        num_in_channels = inputs.get_shape()[-1]
       elif data_format=='NCHW':
-        num_in_channels = inputs.get_shape()[1].value
+        num_in_channels = inputs.get_shape()[1]
       kernel_shape = [kernel_h, kernel_w,
                       num_in_channels, num_output_channels]
       kernel = _variable_with_weight_decay('weights',
@@ -468,7 +468,7 @@ def avg_pool3d(inputs,
 def batch_norm_template_unused(inputs, is_training, scope, moments_dims, bn_decay):
   """ NOTE: this is older version of the util func. it is deprecated.
   Batch normalization on convolutional maps and beyond...
-  Ref.: http://stackoverflow.com/questions/33949786/how-could-i-use-batch-normalization-in-tensorflow
+  Ref.: http://stackoverflow.com/questions/33949786/how-could-i-use-batch-normalization-in-tensorflow.compat.v1
   
   Args:
       inputs:        Tensor, k-D input ... x C could be BC or BHWC or BDHWC
@@ -490,7 +490,7 @@ def batch_norm_template_unused(inputs, is_training, scope, moments_dims, bn_deca
     ema = tf.train.ExponentialMovingAverage(decay=decay)
     # Operator that maintains moving averages of variables.
     # Need to set reuse=False, otherwise if reuse, will see moments_1/mean/ExponentialMovingAverage/ does not exist
-    # https://github.com/shekkizh/WassersteinGAN.tensorflow/issues/3
+    # https://github.com/shekkizh/WassersteinGAN.tensorflow.compat.v1/issues/3
     with tf.variable_scope(tf.get_variable_scope(), reuse=False):
         ema_apply_op = tf.cond(is_training,
                                lambda: ema.apply([batch_mean, batch_var]),
@@ -511,7 +511,7 @@ def batch_norm_template_unused(inputs, is_training, scope, moments_dims, bn_deca
 
 def batch_norm_template(inputs, is_training, scope, moments_dims_unused, bn_decay, data_format='NHWC'):
   """ Batch normalization on convolutional maps and beyond...
-  Ref.: http://stackoverflow.com/questions/33949786/how-could-i-use-batch-normalization-in-tensorflow
+  Ref.: http://stackoverflow.com/questions/33949786/how-could-i-use-batch-normalization-in-tensorflow.compat.v1
   
   Args:
       inputs:        Tensor, k-D input ... x C could be BC or BHWC or BDHWC
@@ -524,11 +524,9 @@ def batch_norm_template(inputs, is_training, scope, moments_dims_unused, bn_deca
       normed:        batch-normalized maps
   """
   bn_decay = bn_decay if bn_decay is not None else 0.9
-  return tf.contrib.layers.batch_norm(inputs, 
+  return tf.layers.batch_normalization(inputs, 
                                       center=True, scale=True,
-                                      is_training=is_training, decay=bn_decay,updates_collections=None,
-                                      scope=scope,
-                                      data_format=data_format)
+                                      training=is_training, momentum=bn_decay)
 
 
 def batch_norm_for_fc(inputs, is_training, bn_decay, scope):

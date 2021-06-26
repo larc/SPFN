@@ -5,7 +5,7 @@ sys.path.append(os.path.join(BASE_DIR, '..'))
 
 import numpy as np
 import argparse
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from dataset import Dataset
 from eval_config import EvalConfig

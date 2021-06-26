@@ -2,7 +2,7 @@ import os, sys
 from os.path import dirname
 sys.path.append(dirname(__file__))
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from differentiable_tls import solve_weighted_tls
 from constants import SQRT_EPS, DIVISION_EPS, LS_L2_REGULARIZER
 
@@ -83,7 +83,7 @@ def guarded_matrix_solve_ls(A, b, W, condition_number_cap=1e5):
     b *= tf.expand_dims(sqrt_W, axis=2) # BxNx1
     # Compute singular value, trivializing the problem when condition number is too large
     AtA = tf.matmul(a=A, b=A, transpose_a=True)
-    s, _, _ = [tf.stop_gradient(u) for u in tf.svd(AtA)] # s will be BxD
+    s, _, _ = [tf.stop_gradient(u) for u in tf.linalg.svd(AtA)] # s will be BxD
     mask = tf.less(s[:, 0] / s[:, -1], condition_number_cap) # B
     A *= tf.to_float(tf.expand_dims(tf.expand_dims(mask, axis=1), axis=2)) # zero out badly conditioned data
     x = tf.matrix_solve_ls(A, b, l2_regularizer=LS_L2_REGULARIZER, fast=True) # BxDx1 
